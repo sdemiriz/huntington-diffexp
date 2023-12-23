@@ -1,11 +1,11 @@
 process downloadFASTQ {
   input:
-    val SRR_ACC
+    val srr_acc
 
   script:
-  "prefetch $SRR_ACC"
+  "prefetch $srr_acc"
 }
 
 workflow {
-  Channel.fromPath("SRR_Acc_List.txt").splitText() | downloadFASTQ
+  Channel.fromPath(params.srr_acc_file).splitText() | downloadFASTQ
 }
