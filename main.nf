@@ -2,10 +2,10 @@ process downloadFASTQ {
   publishDir "data/fastq_reads/", mode: "copy"
 
   input:
-    val srr_accession_file
+    val srr_accession_list
 
   script:
-  "prefetch $srr_accession_file"
+  "prefetch $srr_accession_list"
 }
 
 process downloadGenome {
@@ -16,11 +16,11 @@ process downloadGenome {
 
   script:
     """
-    curl https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz > GRCh38.fasta.gz
+    curl $params.genome_download_url > 'GRCh38.fasta.gz'
     """
 }
 
 workflow {
-  Channel.fromPath(params.srr_acc_file).splitText() | downloadFASTQ
+  Channel.fromPath(params.srr_accession_list).splitText() | downloadFASTQ
   downloadGenome()
 }
