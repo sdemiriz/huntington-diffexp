@@ -1,9 +1,11 @@
 process downloadFASTQ {
+  publishDir "data/fastq_reads/", mode: "copy"
+
   input:
-    val srr_acc
+    val srr_accession_file
 
   script:
-  "prefetch $srr_acc"
+  "prefetch $srr_accession_file"
 }
 
 process downloadGenome {
