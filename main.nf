@@ -38,6 +38,6 @@ process fastQC {
 }
 
 workflow {
-  Channel.fromPath(params.srr_accession_list).splitText() | first | downloadFASTQ
+  Channel.fromPath(params.srr_accession_list).splitText() | first | downloadFASTQ | fastQC
   downloadGenome()
 }
