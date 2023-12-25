@@ -23,6 +23,6 @@ process downloadGenome {
 }
 
 workflow {
-  Channel.fromPath(params.srr_accession_list).splitText() | downloadFASTQ
+  Channel.fromPath(params.srr_accession_list).splitText() | first | downloadFASTQ
   downloadGenome()
 }
