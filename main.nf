@@ -4,9 +4,13 @@ process downloadFASTQ {
   input:
     val srr_accession_number
 
+  output:
+    path 'SRR[0-9]*_{1,2}.fastq'
+
   script:
     """
-    prefetch $srr_accession_number
+    prefetch ${srr_accession_number}
+    fasterq-dump ${srr_accession_number}
     """
 }
 
