@@ -22,6 +22,21 @@ process downloadGenome {
     """
 }
 
+process fastQC {
+  publishDir "results/fastqc/", mode: "copy"
+
+  input:
+    path srr_fastq
+
+  output:
+    path '*.html'
+
+  script:
+    """
+    fastqc $srr_fastq
+    """
+}
+
 workflow {
   Channel.fromPath(params.srr_accession_list).splitText() | first | downloadFASTQ
   downloadGenome()
