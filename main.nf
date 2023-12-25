@@ -1,6 +1,4 @@
 process downloadFASTQ {
-  publishDir "data/fastq_reads/", mode: "copy"
-
   input:
     val srr_accession_number
 
@@ -15,8 +13,6 @@ process downloadFASTQ {
 }
 
 process downloadGenome {
-  publishDir "data/genome/", mode: "copy"
-
   output:
     path 'GRCh38.fasta.gz'
 
