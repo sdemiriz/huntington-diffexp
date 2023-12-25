@@ -39,6 +39,9 @@ process fastQC {
 }
 
 workflow {
-  Channel.fromPath(params.srr_accession_list).splitText() | first | downloadFASTQ | fastQC
-  downloadGenome()
+  srr = Channel.fromPath(params.srr_accession_list).splitText() | first
+  fastq_reads = downloadFASTQ(srr)
+  fastQC(fastq_reads)
+
+  genome = downloadGenome()
 }
