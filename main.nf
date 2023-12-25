@@ -30,6 +30,7 @@ process fastQC {
 
   output:
     path '*.html'
+    path '*.zip'
 
   script:
     """
