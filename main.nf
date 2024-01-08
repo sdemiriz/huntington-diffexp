@@ -28,25 +28,24 @@ process downloadGenome {
 }
 
 process fastQC {
-  publishDir "results/fastqc/", mode: "copy"
+  publishDir "results/fastqc_raws/", mode: "copy"
 
   input:
     path srr_fastq
 
   output:
     path '*.html'
-    path '*.zip'
 
   script:
     """
-    fastqc $srr_fastq
+    fastqc ${srr_fastq}
     """
 }
 
 workflow {
   srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText() | first 
   fastq = downloadFASTQ(srr_accession_numbers)
-  fastq.view()
+  fastQC(fastq)
 
   genome = downloadGenome(params.genome_url)
 }
