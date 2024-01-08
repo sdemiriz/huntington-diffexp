@@ -1,9 +1,11 @@
+input_ch = channel.fromPath(params.srr_accession_list).splitText()
+
 process downloadFASTQ {
   input:
     val srr_accession_number
 
   output:
-    path 'SRR[0-9]*_{1,2}.fastq'
+    file "*.fastq"
 
   script:
     """
@@ -13,12 +15,15 @@ process downloadFASTQ {
 }
 
 process downloadGenome {
+  input:
+    val genome_url
+
   output:
     path 'GRCh38.fasta.gz'
 
   script:
     """
-    curl $params.genome_download_url > 'GRCh38.fasta.gz'
+    curl ${genome_url} > 'GRCh38.fasta.gz'
     """
 }
 
@@ -39,9 +44,9 @@ process fastQC {
 }
 
 workflow {
-  srr = Channel.fromPath(params.srr_accession_list).splitText() | first
-  fastq_reads = downloadFASTQ(srr)
-  fastQC(fastq_reads)
+  srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText() | first 
+  fastq = downloadFASTQ(srr_accession_numbers)
+  fastq.view()
 
-  genome = downloadGenome()
+  genome = downloadGenome(params.genome_url)
 }
