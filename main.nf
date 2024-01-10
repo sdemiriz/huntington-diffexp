@@ -1,17 +1,15 @@
-input_ch = channel.fromPath(params.srr_accession_list).splitText()
 
 process downloadFASTQ {
   input:
     val srr_accession_number
 
   output:
-    path "*_1.fastq"
-    path "*_2.fastq"
+    path "data/reads/SRR*_{1,2}.fastq"
 
   script:
     """
     prefetch ${srr_accession_number}
-    fasterq-dump ${srr_accession_number}
+    fasterq-dump -O data/reads/ ${srr_accession_number}
     """
 }
 
@@ -62,11 +60,5 @@ process fastp {
 
 workflow {
   srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText() | first 
-  (fastq_1, fastq_2) = downloadFASTQ(srr_accession_numbers)
-  fastQC(fastq_1, fastq_2)
-
-  (fastq_1t, fastq_2t) = fastp(fastq_1, fastq_2)
-  // fastQC(fastq_1t, fastq_2t)
-
-  genome = downloadGenome(params.genome_url)
+  downloadFASTQ(srr_accession_numbers)
 }
