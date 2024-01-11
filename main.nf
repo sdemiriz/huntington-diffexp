@@ -30,12 +30,10 @@ process fastQC {
   publishDir "results/fastqc_raws/", mode: "copy"
 
   input:
-    path fastq_1
-    path fastq_2
+    tuple file(fastq_1), file(fastq_2)
 
   output:
-    path '*_1_fastqc.html'
-    path '*_2_fastqc.html'
+    path "SRR*_{1,2}_fastqc.html"
 
   script:
     """
@@ -45,20 +43,22 @@ process fastQC {
 
 process fastp {
   input:
-    path '*_1.fastq'
-    path '*_2.fastq'
+    tuple file(fastq_1), file(fastq_2)
 
   output:
-    path '*_1T.fastq'
-    path '*_2T.fastq'
+    path "SRR*_{1,2}.fastq.T"
 
   script:
     """
-    fastp -i *_1.fastq -I *_2.fastq -o *_1T.fastq -O *_2T.fastq
+    fastp --in1 ${fastq_1} --in2 ${fastq_2} --out1 ${fastq_1}.T --out2 ${fastq_2}.T
     """
 }
 
 workflow {
-  srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText() | first 
-  downloadFASTQ(srr_accession_numbers)
+  srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText().map{it.trim()} | first
+  fastq = downloadFASTQ(srr_accession_numbers)
+  genome = downloadGenome(params.genome_url)
+
+  fastQC(fastq)
+  fastp(fastq)
 }
