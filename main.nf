@@ -4,12 +4,12 @@ process downloadFASTQ {
     val srr_accession_number
 
   output:
-    path "data/reads/SRR*_{1,2}.fastq"
+    path "SRR*_{1,2}.fastq"
 
   script:
     """
     prefetch ${srr_accession_number}
-    fasterq-dump -O data/reads/ ${srr_accession_number}
+    fasterq-dump ${srr_accession_number}
     """
 }
 
@@ -18,11 +18,11 @@ process downloadGenome {
     val genome_url
 
   output:
-    path 'GRCh38.fasta.gz'
+    path "GRCh38.fasta.gz"
 
   script:
     """
-    curl ${genome_url} > 'GRCh38.fasta.gz'
+    curl ${genome_url} --output GRCh38.fasta.gz
     """
 }
 
