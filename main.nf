@@ -45,7 +45,7 @@ process fastQC {
   publishDir "results/fastqc_raws/", mode: "copy"
 
   input:
-    tuple file(fastq_1), file(fastq_2)
+    tuple path(fastq_1), path(fastq_2)
 
   output:
     path "SRR*_{1,2}_fastqc.html"
@@ -58,7 +58,7 @@ process fastQC {
 
 process fastp {
   input:
-    tuple file(fastq_1), file(fastq_2)
+    tuple path(fastq_1), path(fastq_2)
 
   output:
     path "SRR*_{1,2}.fastq.T"
