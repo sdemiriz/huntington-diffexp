@@ -79,9 +79,10 @@ process starGenome {
     STAR \
     --runThreadN 6 \
     --runMode genomeGenerate \
-    --genomeDir .
-    --genomeFastaFiles GRCh38.fasta.gz
-    --s
+    --genomeDir GRCh38.index \
+    --genomeFastaFiles ${genome} \
+    --sjdbGTFfile ${genome_annotations} \
+    --sjdbOverhang 99
     """
 }
 
