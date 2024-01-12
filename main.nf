@@ -67,12 +67,13 @@ process fastp {
     """
 }
 
-process starGenome {
+process starGenomeIndex {
   input:
-    path "GRCh38.fasta.gz"
+    path genome
+    path genome_annotations
 
   output:
-    path "GRCH38.index"
+    path "GRCh38.index"
 
   script:
     """
@@ -94,4 +95,6 @@ workflow {
 
   fastQC(fastq)
   fastp(fastq)
+
+  index = starGenomeIndex(genome, annotations)
 }
