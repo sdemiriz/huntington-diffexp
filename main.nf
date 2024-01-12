@@ -18,11 +18,12 @@ process downloadGenome {
     val genome_url
 
   output:
-    path "GRCh38.fasta.gz"
+    path "GRCh38.fasta"
 
   script:
     """
     curl ${genome_url} --output GRCh38.fasta.gz
+    gzip -d GRCh38.fasta.gz
     """
 }
 
@@ -31,11 +32,12 @@ process downloadAnnotations {
     val annotations_url
 
   output:
-    path "gencode_annotation.gtf.gz"
+    path "gencode_annotation.gtf"
 
   script:
     """
     curl ${annotations_url} --output gencode_annotation.gtf.gz
+    gzip -d gencode_annotation.gtf.gz
     """
 }
 
