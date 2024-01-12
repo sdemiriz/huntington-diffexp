@@ -26,6 +26,19 @@ process downloadGenome {
     """
 }
 
+process downloadAnnotations {
+  input:
+    val annotations_url
+
+  output:
+    path "gencode_annotation.gtf.gz"
+
+  script:
+    """
+    curl ${annotations_url} --output gencode_annotation.gtf.gz
+    """
+}
+
 process fastQC {
   publishDir "results/fastqc_raws/", mode: "copy"
 
@@ -58,6 +71,7 @@ workflow {
   srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText().map{it.trim()} | first
   fastq = downloadFASTQ(srr_accession_numbers)
   genome = downloadGenome(params.genome_url)
+  annotations = downloadAnnotations(params.genome_annotations_url)
 
   fastQC(fastq)
   fastp(fastq)
