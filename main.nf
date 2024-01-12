@@ -67,6 +67,24 @@ process fastp {
     """
 }
 
+process starGenome {
+  input:
+    path "GRCh38.fasta.gz"
+
+  output:
+    path "GRCH38.index"
+
+  script:
+    """
+    STAR \
+    --runThreadN 6 \
+    --runMode genomeGenerate \
+    --genomeDir .
+    --genomeFastaFiles GRCh38.fasta.gz
+    --s
+    """
+}
+
 workflow {
   srr_accession_numbers = channel.fromPath(params.srr_accession_list).splitText().map{it.trim()} | first
   fastq = downloadFASTQ(srr_accession_numbers)
