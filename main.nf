@@ -80,12 +80,13 @@ process starGenomeIndex {
   script:
     """
     STAR \
-    --runThreadN 6 \
+    --runThreadN 10 \
     --runMode genomeGenerate \
     --genomeDir GRCh38.index \
     --genomeFastaFiles ${genome} \
     --sjdbGTFfile ${genome_annotations} \
-    --sjdbOverhang 99
+    --sjdbOverhang 99 \
+    --limitGenomeGenerateRAM 9000000000
     """
 }
 
